@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose';
 // import Product from './models/product.model.js';
 import { productRouter } from './routes/product.route.js';
+import { userRouter } from './routes/user.route.js';
 const app = express();
 // middleware
 
@@ -10,12 +11,11 @@ app.use(express.urlencoded({ extended: false }));
 
 //routes
 app.use('/api/products', productRouter);
+app.use('/api/user',userRouter);
 
 app.get('/home', (req, res) => {
     res.send("get home");
 })
-
-
 
 mongoose.connect("mongodb+srv://darshansakdecha:darshan123@cluster0.ssyrqmi.mongodb.net/Node_Crud")
     .then(() => {
