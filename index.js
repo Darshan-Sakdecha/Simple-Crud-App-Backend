@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose';
+import cors from 'cors'
 // import Product from './models/product.model.js';
 import { productRouter } from './routes/product.route.js';
 import { userRouter } from './routes/user.route.js';
@@ -8,10 +9,10 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors())
 //routes
 app.use('/api/products', productRouter);
-app.use('/api/user',userRouter);
+app.use('/api/user', userRouter);
 
 app.get('/home', (req, res) => {
     res.send("get home");

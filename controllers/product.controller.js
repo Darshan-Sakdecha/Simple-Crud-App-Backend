@@ -154,8 +154,6 @@ const filterData = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-
-
 // combaine code : search , sort , filter , pagination inside production level code :
 
 // export const getInventory = async (req, res) => {
@@ -217,5 +215,7 @@ const filterData = async (req, res) => {
 //     res.status(500).json({ success: false, message: error.message });
 //   }
 // };
+
+
 
 export { getProducts, getByIdProduct, insertProduct, updateProduct, deleteProduct, paginationProduct, filterData, serchingData }
