@@ -10,13 +10,14 @@ const userSchema = mongoose.Schema({
         required: true
     },
     password: {
-        type: Number,
+        type: String,
         required: true
     },
     mobileNo: {
         type: Number,
         required: true,
-        length: 10
+        minlength: 10,
+        maxlength: 10
     },
     address: {
         type: String,

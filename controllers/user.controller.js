@@ -1,5 +1,87 @@
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken'
+import dotenv from "dotenv"
 
+dotenv.config();
+
+//Register : 
+const registerUser = async (req, res) => {
+    try {
+        if (!req.body) {
+            return res.status(400).json({ message: "Request body is missing" });
+        }
+        const { name, email, password, mobileNo, address, description } = req.body
+
+        if (!name || !email || !password || !mobileNo || !address) {
+            return res.status(400).json({ message: "Please provide all required fields" });
+        }
+
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already exists" });
+        }
+
+        const hashedPass = await bcrypt.hash(password, 10);
+
+        const user = await User.create({
+            name, email, password: hashedPass, mobileNo, address, description
+        })
+
+        res.json({ message: "User registered", user });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+//Login : 
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email & password are required !" });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found with this email & password" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+            {
+                userId: user._id,
+                email: user.email
+            },//Payload
+            process.env.JWT_SECRET,//signature
+            { expiresIn: "1d" }//payload
+        );
+
+        res.json({
+            message: "Login successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                mobileNo: user.mobileNo,
+                address: user.address,
+                description: user.description || null
+            }
+        })
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 // GetAll : 
 const userGet = async (req, res) => {
     try {
@@ -102,4 +184,4 @@ const updateUser = async (req, res) => {
     }
 }
 
-export { userGet, deleteUser, updateUser, getUserById, insertUser }
+export { userGet, deleteUser, updateUser, getUserById, insertUser, registerUser, loginUser }
