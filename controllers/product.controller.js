@@ -64,7 +64,6 @@ const deleteProduct = async (req, res) => {
 
 const paginationProduct = async (req, res) => {
     try {
-        //  console.log("➡ Pagination route hit!");
         const page = Math.max(1, Number(req.query.page) || 1);
         const limit = Math.min(50, Number(req.query.limit) || 10);
 

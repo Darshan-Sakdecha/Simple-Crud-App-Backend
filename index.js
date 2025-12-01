@@ -4,15 +4,16 @@ import cors from 'cors'
 // import Product from './models/product.model.js';
 import { productRouter } from './routes/product.route.js';
 import { userRouter } from './routes/user.route.js';
+import productImage from './routes/productImage.route.js';
 const app = express();
 // middleware
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors())
 //routes
 app.use('/api/products', productRouter);
 app.use('/api/user', userRouter);
+app.use('/api/pi', productImage);
 
 app.get('/home', (req, res) => {
     res.send("get home");
